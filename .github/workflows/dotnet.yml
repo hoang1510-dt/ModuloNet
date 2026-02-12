@@ -1,0 +1,109 @@
+name: .NET CI/CD
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+env:
+  DOTNET_VERSION: '10.0.x'
+  CACHE_VERSION: v1
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Cache NuGet packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ env.CACHE_VERSION }}-${{ hashFiles('**/*.csproj', '**/packages.lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-${{ env.CACHE_VERSION }}-
+
+      - name: Restore dependencies
+        run: dotnet restore ModuloNet.slnx
+
+      - name: Build
+        run: dotnet build ModuloNet.slnx --no-restore --configuration Release
+
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Cache NuGet packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ env.CACHE_VERSION }}-${{ hashFiles('**/*.csproj', '**/packages.lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-${{ env.CACHE_VERSION }}-
+
+      - name: Restore dependencies
+        run: dotnet restore ModuloNet.slnx
+
+      - name: Build
+        run: dotnet build ModuloNet.slnx --no-restore --configuration Release
+
+      - name: Run tests
+        run: dotnet test ModuloNet.slnx --no-build --configuration Release --verbosity normal --logger "trx;LogFileName=test-results.trx" --collect:"XPlat Code Coverage"
+
+      - name: Upload test results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: test-results
+          path: '**/TestResults/**'
+
+  publish:
+    name: Publish API
+    runs-on: ubuntu-latest
+    needs: [build, test]
+    if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop')
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Cache NuGet packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ env.CACHE_VERSION }}-${{ hashFiles('**/*.csproj', '**/packages.lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-${{ env.CACHE_VERSION }}-
+
+      - name: Restore dependencies
+        run: dotnet restore ModuloNet.slnx
+
+      - name: Publish API
+        run: dotnet publish src/ModuloNet.Api/ModuloNet.Api.csproj -c Release -o ./publish --no-restore
+
+      - name: Upload API artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: modulonet-api
+          path: ./publish

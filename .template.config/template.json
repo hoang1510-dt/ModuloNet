@@ -1,0 +1,20 @@
+{
+  "$schema": "http://json.schemastore.org/template",
+  "author": "ModuloNet",
+  "classifications": [
+    "Web",
+    "API",
+    "Clean Architecture",
+    "Minimal API"
+  ],
+  "identity": "ModuloNet.Solution",
+  "name": "ModuloNet Clean Architecture API",
+  "description": "A .NET Clean Architecture solution with API, Application, Infrastructure, and Test projects.",
+  "shortName": "modulonet",
+  "sourceName": "ModuloNet",
+  "tags": {
+    "language": "C#",
+    "type": "solution"
+  },
+  "preferNameDirectory": true
+}
