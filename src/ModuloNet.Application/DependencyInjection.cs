@@ -1,6 +1,7 @@
 using System.Reflection;
 using FluentValidation;
 using MediatR;
+using Microsoft.Extensions.DependencyInjection;
 using ModuloNet.Application.Behaviors;
 using ModuloNet.Application.Features.Courses.Create;
 
