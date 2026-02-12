@@ -1,0 +1,8 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/ModuloNet.Api/ModuloNet.Api.csproj" />
+    <Project Path="src/ModuloNet.Application/ModuloNet.Application.csproj" />
+    <Project Path="src/ModuloNet.Infrastructure/ModuloNet.Infrastructure.csproj" />
+    <Project Path="src/ModuloNet.Tests/ModuloNet.Tests.csproj" />
+  </Folder>
+</Solution>
