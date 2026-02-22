@@ -13,7 +13,7 @@ public sealed class ApplicationDbContext : IdentityDbContext<ApplicationUser, Id
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
 
     public DbSet<Course> Courses => Set<Course>();
-
+    public DbSet<RefreshToken> RefreshTokens => Set<RefreshToken>();
     public void AddCourse(Course course) => Courses.Add(course);
 
     public async Task<bool> DeleteCourseAsync(Guid id, CancellationToken cancellationToken = default)

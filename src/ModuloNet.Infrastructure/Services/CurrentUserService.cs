@@ -16,4 +16,9 @@ internal sealed class CurrentUserService : ICurrentUser
     public string? UserId => _accessor.HttpContext?.User?.FindFirstValue(ClaimTypes.NameIdentifier);
     public string? UserName => _accessor.HttpContext?.User?.Identity?.Name;
     public bool IsAuthenticated => _accessor.HttpContext?.User?.Identity?.IsAuthenticated ?? false;
+    public IReadOnlyCollection<string> Roles =>
+        _accessor.HttpContext?.User?.FindAll(ClaimTypes.Role).Select(x => x.Value).ToArray()
+        ?? Array.Empty<string>();
+
+    public bool IsInRole(string role) => Roles.Contains(role, StringComparer.OrdinalIgnoreCase);
 }
