@@ -1,5 +1,6 @@
 using MediatR;
 using ModuloNet.Application.Abstractions;
+using ModuloNet.Application.Features.Auth;
 
 namespace ModuloNet.Application.Features.Auth.Login;
 

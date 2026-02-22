@@ -2,6 +2,7 @@ using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
+using ModuloNet.Application.Features.Auth;
 
 namespace ModuloNet.Application.Features.Auth.ExternalExchange;
 
