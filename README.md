@@ -43,6 +43,24 @@ dotnet run --project src/ModuloNet.Api
 
 Replace `YourAppName` with your solution name; project names will follow (e.g. `YourAppName.Api`, `YourAppName.Application`).
 
+### Database migrations
+
+The project uses Entity Framework Core with **PostgreSQL**. Run migrations from the solution root:
+
+```bash
+# Ensure the global EF tools match your runtime (e.g. for .NET 10 / EF 10)
+dotnet tool update --global dotnet-ef
+
+# Add a new migration
+dotnet ef migrations add MigrationName --project src/ModuloNet.Infrastructure --startup-project src/ModuloNet.Api
+
+# Update the database
+dotnet ef database update --project src/ModuloNet.Infrastructure --startup-project src/ModuloNet.Api
+```
+
+- **Startup project** must be `src/ModuloNet.Api` (the host with DI). Using `ModuloNet.Infrastructure` will fail.
+- Ensure a PostgreSQL instance is running and `ConnectionStrings:DefaultConnection` in `appsettings.json` points to it (e.g. `Host=localhost;Database=ModuloNet;Username=postgres;Password=postgres`).
+
 ---
 
 ## Folder Structure
